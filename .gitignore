@@ -32,3 +32,5 @@ solver/node_modules/
 solver/darknet64/darknet
 solver/darknet64/temp.jpg
 solver/darknet64/predictions.jpg
+solver/darknet64/predictions.jpg
+solver/darknet64/temp.jpg
