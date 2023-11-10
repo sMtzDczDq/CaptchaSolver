@@ -11,9 +11,14 @@ var black = Jimp.rgbaToInt(0, 0, 0, 255);
 const darknetExec = (process.platform === 'win32' ? 'darknet_no_gpu.exe' : './darknet');
 
 var what2Scan = process.argv[2] || "keep2share.cc"; //Start parameter
-var inputPic = 'input.gif';
+//var inputPic = 'input.gif';
+var inputPic = process.argv[3]
 //inputPic = 'c2.PNG';
 console.log("Running ->", what2Scan);
+console.log(process.argv[0])
+console.log(process.argv[1])
+console.log(process.argv[3])
+
 
 
 if (what2Scan == "keep2share.cc") {
