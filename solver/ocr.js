@@ -15,8 +15,6 @@ var what2Scan = process.argv[2] || "keep2share.cc"; //Start parameter
 var inputPic = process.argv[3]
 //inputPic = 'c2.PNG';
 console.log("Running ->", what2Scan);
-console.log(process.argv[0])
-console.log(process.argv[1])
 console.log(process.argv[3])
 
 
