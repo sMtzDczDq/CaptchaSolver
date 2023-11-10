@@ -34,3 +34,5 @@ solver/darknet64/temp.jpg
 solver/darknet64/predictions.jpg
 solver/darknet64/predictions.jpg
 solver/darknet64/temp.jpg
+solver/log.txt
+solver/result.txt
