@@ -30,7 +30,7 @@ Using Javascript and [YOLO DARKNET](https://pjreddie.com/darknet/yolo/) neuronal
 4. Install NodeJS and make sure it's available in your PATH
 5. Copy the "JDownloader 2.0" content into your current JD2 folder (probably `~/.jd` if you installed via flatpack try the path: /home/<username>/.var/app/org.jdownloader.JDownloader/data/jdownloader)
 6. Restart JD2 and start downloading
-  
+
 ## Installation MAC
 
 ```
@@ -39,7 +39,7 @@ Using Javascript and [YOLO DARKNET](https://pjreddie.com/darknet/yolo/) neuronal
 4. cd darknet
 5. mkdir build_release
 6. cd build_release
-7. cmake .. -DENABLE_CUDA=OFF -DOpenCV_DIR=/usr/local/Cellar/opencv/cmake
+7. cmake .. -DENABLE_CUDA=OFF -DOpenCV_DIR=/opt/homebrew/opt/opencv/lib/cmake
 8. cmake --build . --target install --parallel 8
 9. ..
 10. vi makefile
@@ -74,7 +74,7 @@ edit `npm` to `/usr/local/bin/npm`
 5. `rm -rf /Users/utsho/CaptchaSolver /Users/utsho/darknet`
 (Remove the duplicate darknet & CaptchaSolver directory from your user home directory as it'll no longer needed by `CaptchaSolver`)
 
-Finally you can open JDownloader app and try to download, if it didn't work in a minute or 2 then stop or disable the specific downloads and start it again. If still it didn't work just see the log file in `/Applications/JDownloader\ 2.0/tools/offlineCaptchaSolver/log.txt`  
+Finally you can open JDownloader app and try to download, if it didn't work in a minute or 2 then stop or disable the specific downloads and start it again. If still it didn't work just see the log file in `/Applications/JDownloader\ 2.0/tools/offlineCaptchaSolver/log.txt`
 
 
 ## Troubleshooting Windows
@@ -86,7 +86,7 @@ h: 74%
 C: 100%
 Y: 99%
 C: 100%
-1: 99% 
+1: 99%
 ```
 Or an error message.
 
@@ -95,7 +95,7 @@ If you get "msvcr100.dll" is missing, you need to install `Microsoft Visual C++ 
 ## Deactivate The Captcha Solver for Hosts
 This comes in handy, if the host changed the captcha type and you have to deactivate some hosts...
 
-1. Go to ...\JDownloader v2.0\jd\captcha\methods\ 
+1. Go to ...\JDownloader v2.0\jd\captcha\methods\
 2. Move the folders of the hosts you want to deactivate "keep2share_linux", "keep2share_win" to another save location
 3. Restart JDownloader 2
 
