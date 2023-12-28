@@ -1,5 +1,0 @@
-{
-  "host": "keep2share.cc",
-  "text": "qwqbu2",
-  "confidence": 96
-}
