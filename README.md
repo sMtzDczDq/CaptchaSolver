@@ -34,13 +34,15 @@ Using Javascript and [YOLO DARKNET](https://pjreddie.com/darknet/yolo/) neuronal
 ## Installation MAC
 
 ```
-1. brew install node && brew install cmake && brew install opencv
+1. brew install node && brew install cmake && brew install opencv && brew install libomp
+2.  brew link libomp --force
 3. git clone https://github.com/AlexeyAB/darknet
 4. cd darknet
 5. mkdir build_release
 6. cd build_release
 7. cmake .. -DENABLE_CUDA=OFF -DOpenCV_DIR=/opt/homebrew/opt/opencv/lib/cmake
 8. cmake --build . --target install --parallel 8
+9. brew unlink libomp
 9. ..
 10. vi makefile
 ```
@@ -69,7 +71,7 @@ edit `node` to `/usr/local/bin/node`
 edit `npm` to `/usr/local/bin/npm`
 1. `cp -rf ~/darknet/. ~/CaptchaSolver/JDownloader\ 2.0/tools/offlineCaptchaSolver/darknet64`
 (Copy and merge darknet content to CaptchaSolver)
-3. `cp -rf ~/CaptchaSolver/JDownloader\ 2.0/. /Applications/JDownloader\ 2.0`
+3. `cp -rf ~/CaptchaSolver/JDownloader\ 2.0/. ~/bin/JDownloader\ 2.0*`
 (Copy and merge CaptchaSolver content to JDownloader 2 app folder)
 5. `rm -rf /Users/utsho/CaptchaSolver /Users/utsho/darknet`
 (Remove the duplicate darknet & CaptchaSolver directory from your user home directory as it'll no longer needed by `CaptchaSolver`)

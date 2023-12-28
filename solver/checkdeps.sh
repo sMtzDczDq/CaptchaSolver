@@ -1,6 +1,7 @@
 #!/bin/sh
+set -x
 if [ -d "node_modules" ]; then
 	echo "all good!"
 else
-	/opt/homebrew/bin/npm i jimp
+	$(which npm) i jimp
 fi
