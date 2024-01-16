@@ -1,5 +1,5 @@
 #!/bin/sh
 ./checkdeps.sh
 sleep 1
-$(which node)  ./ocr.js keep2share.cc &> log.txt
+node ./ocr.js keep2share.cc  > log.txt 2>&1
 sleep 1
