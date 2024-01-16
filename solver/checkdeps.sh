@@ -3,5 +3,5 @@ set -x
 if [ -d "node_modules" ]; then
 	echo "all good!"
 else
-	$(which npm) i jimp
+	npm i jimp
 fi
