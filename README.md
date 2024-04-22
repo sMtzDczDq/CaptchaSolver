@@ -35,7 +35,7 @@ Using Javascript and [YOLO DARKNET](https://pjreddie.com/darknet/yolo/) neuronal
 ## Installation MAC
 
 ```
-1. brew install node && brew install cmake && brew install opencv && brew install libomp
+1. brew install node && brew install cmake opencv libomp
 2.  brew link libomp --force
 3. git clone https://github.com/AlexeyAB/darknet
 4. cd darknet
@@ -45,15 +45,6 @@ Using Javascript and [YOLO DARKNET](https://pjreddie.com/darknet/yolo/) neuronal
 8. cmake --build . --target install --parallel 8
 9. brew unlink libomp
 9. ..
-10. vi makefile
-```
-11. Then edit OPENCV=0 to 1
-- You can use nano (as it is very simple) to edit the text file if you are not used to with vi. For that just do: `nano makefile`
-- edit OPENCV=0 to 1
-- press control x
-- then y
-- then enter
-
 Troubleshoot to see if darknet is working with opencv correctly: `cd ~/darknet && ./darknet imtest data/eagle.jpg`
 ```
 12. git clone https://github.com/cracker0dks/CaptchaSolver.git
