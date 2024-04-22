@@ -1,0 +1,18 @@
+Running -> keep2share.cc
+undefined
+keep2share.cc
+(node:91850) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Error: No matching constructor overloading was found. Please see the docs for how to call the Jimp constructor.
+    at Jimp.throwError (/Users/mitch/projects/CaptchaSolver/solver/node_modules/@jimp/utils/dist/index.js:21:13)
+    at new Jimp (/Users/mitch/projects/CaptchaSolver/solver/node_modules/@jimp/core/dist/index.js:322:34)
+    at /Users/mitch/projects/CaptchaSolver/solver/node_modules/@jimp/core/dist/index.js:730:5
+    at new Promise (<anonymous>)
+    at Jimp.read (/Users/mitch/projects/CaptchaSolver/solver/node_modules/@jimp/core/dist/index.js:728:10)
+    at getKeep2share (/Users/mitch/projects/CaptchaSolver/solver/ocr.js:53:10)
+    at Object.<anonymous> (/Users/mitch/projects/CaptchaSolver/solver/ocr.js:24:5)
+    at Module._compile (node:internal/modules/cjs/loader:1368:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1426:10)
+    at Module.load (node:internal/modules/cjs/loader:1205:32) {
+  methodName: 'constructor'
+}
