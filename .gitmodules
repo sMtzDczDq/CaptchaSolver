@@ -2,3 +2,6 @@
 	path = solver/darknet64
 	url = git@github.com:sMtzDczDq/darknet.git
 	branch = master
+[submodule "solver"]
+	path = solver
+	url = https://github.com/sMtzDczDq/darknet
