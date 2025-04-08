@@ -13,16 +13,16 @@ const darknetExec = (process.platform === 'win32' ? 'darknet_no_gpu.exe' : './da
 var what2Scan = process.argv[2] || "keep2share.cc"; //Start parameter
 //var inputPic = 'input.gif';
 var inputPic = process.argv[3]
+var resultFile = inputPic.split("/").pop().split(".").shift()
 //inputPic = 'c2.PNG';
 console.log("Running ->", what2Scan);
 console.log(process.argv[3])
 
 
-
 if (what2Scan == "keep2share.cc") {
     console.log("keep2share.cc");
     getKeep2share(inputPic, function (content) {
-        fs.writeFile('result.txt', content["text"].toString(), (err) => {
+        fs.writeFile((`${resultFile}.txt`), content["text"].toString(), (err) => {
             if (err) throw err;
 
             fs.writeFile('log.txt', JSON.stringify(content, false, 2), (err) => {
@@ -70,9 +70,9 @@ function getKeep2share(file, callback) {
         }
 
         image = image.clone();
-        image.write('./darknet64/temp.jpg', function () {
+        image.write(`./darknet64/${resultFile}.jpg`, function () {
             setTimeout(function () {
-                let result = execSync('cd darknet64 && ' + darknetExec + ' detector test data/obj.data yolov4-tiny-custom.cfg yolov4-tiny-custom_last.weights -dont_show temp.jpg');
+                let result = execSync(`cd darknet64 && ${darknetExec} detector test data/obj.data yolov4-tiny-custom.cfg yolov4-tiny-custom_last.weights -dont_show ${resultFile}.jpg`);
                 let resultString = result.toString('utf8');
                 //console.log(resultString);
 
