@@ -21,5 +21,4 @@ timeout /t 1 >nul
 set /a "elapsed+=1"
 goto wait
 
-timeout /t 1 >nulcall checkdeps.bat
-node.exe ocr.js keep2share.cc
+timeout /t 1 >nul
