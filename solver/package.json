@@ -2,9 +2,10 @@
   "name": "solver",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "ocr.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+
+    "start": "node ocr.js"
   },
   "keywords": [],
   "author": "",
