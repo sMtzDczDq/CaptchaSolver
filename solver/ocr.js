@@ -49,7 +49,7 @@ if (what2Scan == "keep2share.cc") {
 }
 
 //Solving keep2share.cc new captchas
- function getKeep2share(file, callback) {
+ async function getKeep2share(file, callback) {
     Jimp.read(file).then( async () => {
         let image = await Jimp.read(file);
         await image.greyscale()
