@@ -1,8 +1,8 @@
 import fs from "fs";
 import Pixelizer from "image-pixelizer";
-import { Jimp, rgbaToInt } from "jimp";
-import { execSync } from "child_process";
-import { EOL } from "os";
+import {Jimp, rgbaToInt} from "jimp";
+import {execSync} from "child_process";
+import {EOL} from "os";
 
 var white = rgbaToInt(255, 255, 255, 255);
 var red = rgbaToInt(255, 0, 0, 255);
@@ -80,7 +80,7 @@ function getKeep2share(file, callback) {
                 for (var i = 0; i < lines.length; i++) {
                     var line = lines[i];
                     if (line.indexOf(":") !== -1 && line.indexOf("%") !== -1) {
-                        valdResA.push({ c: line.split(":")[0], p: line.split(": ")[1].replace("%", "") })
+                        valdResA.push({c: line.split(":")[0], p: line.split(": ")[1].replace("%", "")})
                     }
                 }
                 while (valdResA.length > 6) { //Remove letters with lowest props
@@ -101,7 +101,7 @@ function getKeep2share(file, callback) {
                     confidence += parseFloat(valdResA[i]["p"]);
                 }
                 confidence = Math.round(confidence / 6);
-                callback({ host: what2Scan, text: text, confidence: confidence });
+                callback({host: what2Scan, text: text, confidence: confidence});
             }, 200)
         });
 
@@ -211,7 +211,7 @@ function getFilejoker(file, callback) {
             }
         }
         console.log("Done getting shapes from images! Going into callback!")
-        callback({ host: what2Scan, text: solution, confidence: confidence });
+        callback({host: what2Scan, text: solution, confidence: confidence});
 
         console.log("Done! Delete old files now!")
         for (var i = 0; i < 20; i++) { //Delete all old files
