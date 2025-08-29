@@ -1,6 +1,7 @@
 import fs from "fs";
 import Pixelizer from "image-pixelizer";
 import {Jimp, rgbaToInt} from "jimp";
+import { intToRGBA } from "jimp";
 import {execSync} from "child_process";
 import {EOL} from "os";
 
@@ -48,28 +49,28 @@ if (what2Scan == "keep2share.cc") {
 }
 
 //Solving keep2share.cc new captchas
-function getKeep2share(file, callback) {
-    Jimp.read(file).then(image => {
-
-        image.rgba(false).greyscale()
+async function getKeep2share(file, callback) {
+    Jimp.read(file).then(async () => {
+        var image = await Jimp.read(file);
+        image.greyscale();
 
         for (var x = 0; x < image.bitmap.width; x++) {
             for (var y = 0; y < image.bitmap.height; y++) {
 
                 let currentColor = image.getPixelColor(x, y);
 
-                var rgb = Jimp.intToRGBA(currentColor);
+                var rgb = intToRGBA(currentColor);
                 if (rgb.r < 253) {
 
                     let newVal = 0;
 
-                    image.setPixelColor(Jimp.rgbaToInt(newVal, newVal, newVal, 255), x, y);
+                    image.setPixelColor(rgbaToInt(newVal, newVal, newVal, 255), x, y);
                 }
             }
         }
 
         image = image.clone();
-        image.write('./darknet64/temp.jpg', function () {
+        await image.write('./darknet64/temp.jpg', function () {
             setTimeout(function () {
                 let result = execSync('cd darknet64 && ' + darknetExec + ' detector test data/obj.data yolov4-tiny-custom.cfg yolov4-tiny-custom_last.weights -dont_show temp.jpg');
                 let resultString = result.toString('utf8');
