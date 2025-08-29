@@ -1,13 +1,12 @@
-import fs from "fs";
-import Pixelizer from "image-pixelizer";
-import {Jimp, rgbaToInt} from "jimp";
-import { intToRGBA } from "jimp";
-import {execSync} from "child_process";
-import {EOL} from "os";
+var Jimp = require('jimp'); //For image processing
+var fs = require('fs');
+const { execSync } = require('child_process');
+const { EOL } = require('os');
 
-var white = rgbaToInt(255, 255, 255, 255);
-var red = rgbaToInt(255, 0, 0, 255);
-var black = rgbaToInt(0, 0, 0, 255);
+const Pixelizer = require('image-pixelizer');
+var white = Jimp.rgbaToInt(255, 255, 255, 255);
+var red = Jimp.rgbaToInt(255, 0, 0, 255);
+var black = Jimp.rgbaToInt(0, 0, 0, 255);
 
 const darknetExec = (process.platform === 'win32' ? 'darknet_no_gpu.exe' : './darknet');
 
@@ -16,7 +15,6 @@ var what2Scan = process.argv[2] || "keep2share.cc"; //Start parameter
 var inputPic = process.argv[3]
 //inputPic = 'c2.PNG';
 console.log("Running ->", what2Scan);
-console.log(process.argv[3])
 
 
 if (what2Scan == "keep2share.cc") {
@@ -49,21 +47,22 @@ if (what2Scan == "keep2share.cc") {
 }
 
 //Solving keep2share.cc new captchas
- async function getKeep2share(file, callback) {
-    Jimp.read(file).then( async () => {
-        let image = await Jimp.read(file);
-        await image.greyscale()
+function getKeep2share(file, callback) {
+    Jimp.read(file).then(image => {
+
+        image.rgba(false).greyscale()
+
         for (var x = 0; x < image.bitmap.width; x++) {
             for (var y = 0; y < image.bitmap.height; y++) {
 
                 let currentColor = image.getPixelColor(x, y);
 
-                var rgb = intToRGBA(currentColor);
+                var rgb = Jimp.intToRGBA(currentColor);
                 if (rgb.r < 253) {
 
                     let newVal = 0;
 
-                    image.setPixelColor(rgbaToInt(newVal, newVal, newVal, 255), x, y);
+                    image.setPixelColor(Jimp.rgbaToInt(newVal, newVal, newVal, 255), x, y);
                 }
             }
         }
@@ -76,13 +75,21 @@ if (what2Scan == "keep2share.cc") {
                 //console.log(resultString);
 
                 var lines = resultString.split(EOL);
+
                 var valdResA = [];
                 for (var i = 0; i < lines.length; i++) {
                     var line = lines[i];
                     if (line.indexOf(":") !== -1 && line.indexOf("%") !== -1) {
-                        valdResA.push({c: line.split(":")[0], p: line.split(": ")[1].replace("%", "")})
+                        valdResA.push({ c: line.split(":")[0], p: line.split(": ")[1].replace("%", "") })
                     }
                 }
+
+                for(var i = valdResA.length-1; i>=0; i--) { //Remove "I" because big "i" and small "L" -> "l" have the same char in this font
+                    if(valdResA[i]["c"] == "I") {
+                        valdResA.splice(i, 1);
+                    }
+                }
+
                 while (valdResA.length > 6) { //Remove letters with lowest props
                     var sma = 100; //Smallest confidence
                     var index = 0; //Index of char with smallest confidence
@@ -101,7 +108,7 @@ if (what2Scan == "keep2share.cc") {
                     confidence += parseFloat(valdResA[i]["p"]);
                 }
                 confidence = Math.round(confidence / 6);
-                callback({host: what2Scan, text: text, confidence: confidence});
+                callback({ host: what2Scan, text: text, confidence: confidence });
             }, 200)
         });
 
@@ -131,7 +138,11 @@ function getFilejoker(file, callback) {
                         CPimage.write("out" + gImgCnt + "_0.png");
                         CPimage.convolute(kernels.blur);
 
-                        let inputBitmap = new Pixelizer.Bitmap(CPimage.bitmap.width, CPimage.bitmap.height, CPimage.bitmap.data);
+                        let inputBitmap = new Pixelizer.Bitmap(
+                            CPimage.bitmap.width,
+                            CPimage.bitmap.height,
+                            CPimage.bitmap.data
+                        );
 
                         let options = new Pixelizer.Options()
                             .setPixelSize(1)
@@ -211,7 +222,7 @@ function getFilejoker(file, callback) {
             }
         }
         console.log("Done getting shapes from images! Going into callback!")
-        callback({host: what2Scan, text: solution, confidence: confidence});
+        callback({ host: what2Scan, text: solution, confidence: confidence });
 
         console.log("Done! Delete old files now!")
         for (var i = 0; i < 20; i++) { //Delete all old files
@@ -271,11 +282,13 @@ function getFilejoker(file, callback) {
         }
     }
 
-    const kernels = {
-        emboss: [[-2, -1, 0], [-1, 1, 1], [0, 1, 2]],
-        edgedetect: [[0, 1, 0], [1, -4, 1], [0, 1, 0]],
-        edgeenhance: [[0, 0, 0], [-1, 1, 0], [0, 0, 0]],
-        blur: [[0.0625, 0.125, 0.0625], [0.125, 0.25, 0.125], [0.0625, 0.125, 0.0625]], // equivalent to {name: "blur", kernel: [[1/16, 1/8, 1/16],[1/8, 1/4, 1/8], [1/16, 1/8, 1/16]]},
-        sharpen: [[0, -1, 0], [-1, 5, -1], [0, -1, 0]]
-    }
+    const kernels =
+        {
+            emboss: [[-2, -1, 0], [-1, 1, 1], [0, 1, 2]],
+            edgedetect: [[0, 1, 0], [1, -4, 1], [0, 1, 0]],
+            edgeenhance: [[0, 0, 0], [-1, 1, 0], [0, 0, 0]],
+            blur: [[0.0625, 0.125, 0.0625], [0.125, 0.25, 0.125], [0.0625, 0.125, 0.0625]],
+            // equivalent to {name: "blur", kernel: [[1/16, 1/8, 1/16],[1/8, 1/4, 1/8], [1/16, 1/8, 1/16]]},
+            sharpen: [[0, -1, 0], [-1, 5, -1], [0, -1, 0]]
+        }
 }
