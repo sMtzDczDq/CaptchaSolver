@@ -4,14 +4,16 @@
   "description": "",
   "main": "ocr.js",
   "scripts": {
+
     "start": "node ocr.js"
   },
+  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.15.0",
   "dependencies": {
     "image-pixelizer": "^1.1.0",
-    "jimp": "1.6.0"
+    "jimp": "0.16.13"
   }
 }

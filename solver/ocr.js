@@ -47,8 +47,8 @@ if (what2Scan == "keep2share.cc") {
 }
 
 //Solving keep2share.cc new captchas
-async function getKeep2share(file, callback) {
-    await file.read(file).then(image => {
+function getKeep2share(file, callback) {
+    Jimp.read(file).then(image => {
 
         image.rgba(false).greyscale()
 
@@ -80,12 +80,12 @@ async function getKeep2share(file, callback) {
                 for (var i = 0; i < lines.length; i++) {
                     var line = lines[i];
                     if (line.indexOf(":") !== -1 && line.indexOf("%") !== -1) {
-                        valdResA.push({c: line.split(":")[0], p: line.split(": ")[1].replace("%", "")})
+                        valdResA.push({ c: line.split(":")[0], p: line.split(": ")[1].replace("%", "") })
                     }
                 }
 
-                for (var i = valdResA.length - 1; i >= 0; i--) { //Remove "I" because big "i" and small "L" -> "l" have the same char in this font
-                    if (valdResA[i]["c"] == "I") {
+                for(var i = valdResA.length-1; i>=0; i--) { //Remove "I" because big "i" and small "L" -> "l" have the same char in this font
+                    if(valdResA[i]["c"] == "I") {
                         valdResA.splice(i, 1);
                     }
                 }
@@ -108,7 +108,7 @@ async function getKeep2share(file, callback) {
                     confidence += parseFloat(valdResA[i]["p"]);
                 }
                 confidence = Math.round(confidence / 6);
-                callback({host: what2Scan, text: text, confidence: confidence});
+                callback({ host: what2Scan, text: text, confidence: confidence });
             }, 200)
         });
 
@@ -118,7 +118,7 @@ async function getKeep2share(file, callback) {
 }
 
 function getFilejoker(file, callback) {
-    file.read(file).then(image => {
+    Jimp.read(file).then(image => {
 
         var mainImg = "";
         var solution = "";
