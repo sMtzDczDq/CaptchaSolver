@@ -1,19 +1,26 @@
 {
-  "name": "solver",
-  "version": "1.0.0",
-  "description": "",
+  "name": "offlinecaptchasolver",
+  "version": "2.0.0",
+  "description": "solve captchas",
   "main": "ocr.js",
-  "scripts": {
-
-    "start": "node ocr.js"
-  },
-  "type": "module",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.15.0",
   "dependencies": {
-    "image-pixelizer": "^1.1.0",
-    "jimp": "0.16.13"
-  }
+    "image-pixelizer": ">=1.1.0",
+    "jimp": "^0.16.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cracker0dks/CaptchaSolver.git"
+  },
+  "keywords": [
+    "captchasolver"
+  ],
+  "author": "cracker0kds",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cracker0dks/CaptchaSolver/issues"
+  },
+  "homepage": "https://github.com/cracker0dks/CaptchaSolver#readme"
 }
