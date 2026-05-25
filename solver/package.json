@@ -2,6 +2,7 @@
   "name": "offlinecaptchasolver",
   "version": "2.0.0",
   "description": "solve captchas",
+  "type": "commonjs",
   "main": "ocr.js",
   "dependencies": {
     "image-pixelizer": ">=1.1.0",
