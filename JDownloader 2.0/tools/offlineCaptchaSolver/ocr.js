@@ -46,6 +46,93 @@ if (what2Scan == "keep2share.cc") {
 }
 
 //Solving keep2share.cc new captchas
+var ANSI_RE = /\x1b\[[0-9;]*m/g;
+var OLD_DETECTION_RE = /^\s*(\S+):\s*([\d.]+)%(?:\s*\(left_x:\s*(-?\d+(?:\.\d+)?)\s+top_y:\s*(-?\d+(?:\.\d+)?)\s+width:\s*(-?\d+(?:\.\d+)?)\s+height:\s*(-?\d+(?:\.\d+)?)\))?\s*$/;
+var NEW_DETECTION_RE = /^\s*(\S+)\s+c=([\d.]+)%(?:\s+x=(-?\d+(?:\.\d+)?))?(?:\s+y=(-?\d+(?:\.\d+)?))?(?:\s+w=(-?\d+(?:\.\d+)?))?(?:\s+h=(-?\d+(?:\.\d+)?))?\s*$/;
+
+function parseDetections(resultString) {
+    var lines = resultString.replace(ANSI_RE, '').split(EOL);
+    var detections = [];
+
+    for (var i = 0; i < lines.length; i++) {
+        var match = OLD_DETECTION_RE.exec(lines[i]) || NEW_DETECTION_RE.exec(lines[i]);
+        if (!match) {
+            continue;
+        }
+
+        detections.push({
+            c: match[1],
+            p: match[2],
+            pNum: parseFloat(match[2]),
+            x: match[3] === undefined ? null : parseFloat(match[3]),
+            y: match[4] === undefined ? null : parseFloat(match[4]),
+            w: match[5] === undefined ? null : parseFloat(match[5]),
+            h: match[6] === undefined ? null : parseFloat(match[6]),
+            order: i
+        });
+    }
+
+    return detections;
+}
+
+function boxIoU(a, b) {
+    if (a.x === null || a.y === null || a.w === null || a.h === null ||
+        b.x === null || b.y === null || b.w === null || b.h === null) {
+        return 0;
+    }
+
+    var interW = Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x));
+    var interH = Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
+    var intersection = interW * interH;
+    var union = (a.w * a.h) + (b.w * b.h) - intersection;
+    return union > 0 ? intersection / union : 0;
+}
+
+function deduplicateBoxes(detections) {
+    var kept = [];
+    var sorted = detections.slice().sort(function (a, b) {
+        return b.pNum - a.pNum;
+    });
+
+    for (var i = 0; i < sorted.length; i++) {
+        var duplicate = false;
+        for (var j = 0; j < kept.length; j++) {
+            if (boxIoU(sorted[i], kept[j]) > 0.5) {
+                duplicate = true;
+                break;
+            }
+        }
+        if (!duplicate) {
+            kept.push(sorted[i]);
+        }
+    }
+
+    return kept;
+}
+
+function postProcessDetections(resultString) {
+    var detections = deduplicateBoxes(parseDetections(resultString));
+    detections.sort(function (a, b) {
+        var ax = a.x === null ? Number.POSITIVE_INFINITY : a.x;
+        var bx = b.x === null ? Number.POSITIVE_INFINITY : b.x;
+        if (ax !== bx) {
+            return ax - bx;
+        }
+        return a.order - b.order;
+    });
+
+    var chosen = detections.slice(0, 6);
+    var text = '';
+    var confidence = 0;
+    for (var i = 0; i < chosen.length; i++) {
+        text += chosen[i].c;
+        confidence += chosen[i].pNum;
+    }
+    confidence = chosen.length ? Math.round(confidence / chosen.length) : 0;
+
+    return { host: what2Scan, text: text, confidence: confidence };
+}
+
 function getKeep2share(file, callback) {
     Jimp.read(file).then(image => {
 
@@ -69,45 +156,11 @@ function getKeep2share(file, callback) {
         image = image.clone();
         image.write('./darknet64/temp.jpg', function () {
             setTimeout(function () {
-                let result = execSync('cd darknet64 && ' + darknetExec + ' detector test data/obj.data yolov4-tiny-custom.cfg yolov4-tiny-custom_last.weights -dont_show temp.jpg');
+                let result = execSync('cd darknet64 && ' + darknetExec + ' detector test -dont_show -ext_output data/obj.data yolov4-tiny-custom.cfg yolov4-tiny-custom_last.weights temp.jpg');
                 let resultString = result.toString('utf8');
                 //console.log(resultString);
 
-                var lines = resultString.split(EOL);
-                
-                var valdResA = [];
-                for (var i = 0; i < lines.length; i++) {
-                    var line = lines[i];
-                    if (line.indexOf(":") !== -1 && line.indexOf("%") !== -1) {
-                        valdResA.push({ c: line.split(":")[0], p: line.split(": ")[1].replace("%", "") })
-                    }
-                }
-
-                for(var i = valdResA.length-1; i>=0; i--) { //Remove "I" because big "i" and small "L" -> "l" have the same char in this font
-                    if(valdResA[i]["c"] == "I") {
-                        valdResA.splice(i, 1);
-                    }
-                }
-
-                while (valdResA.length > 6) { //Remove letters with lowest props
-                    var sma = 100; //Smallest confidence
-                    var index = 0; //Index of char with smallest confidence
-                    for (var i = 0; i < valdResA.length; i++) {
-                        if (sma > valdResA[i]["p"]) {
-                            sma = valdResA[i]["p"];
-                            index = i;
-                        }
-                    }
-                    valdResA.splice(index, 1);
-                }
-                var text = "";
-                var confidence = 0;
-                for (var i = 0; i < valdResA.length; i++) {
-                    text += valdResA[i]["c"];
-                    confidence += parseFloat(valdResA[i]["p"]);
-                }
-                confidence = Math.round(confidence / 6);
-                callback({ host: what2Scan, text: text, confidence: confidence });
+                callback(postProcessDetections(resultString));
             }, 200)
         });
 
